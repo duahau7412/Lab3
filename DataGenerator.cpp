@@ -2,6 +2,8 @@
 #include <fstream>
 #include <cmath>
 #include <time.h>
+#include <stdlib.h>
+
 using namespace std;
 
 template <class T>
