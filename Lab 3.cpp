@@ -2,8 +2,21 @@
 
 using namespace std;
 
-void sift(int A[],int n,int right){
+void sift(int A[],int left,int right){
+    int i = left;
+    int j = 2 *i;
+    int x = A[i];
+
+    while (i <= right){
+        if(j < right)
+            if(A[j] > A[j + 1]) j++;
+        if(x == A[j]) break;
+        A[i] = A[j];
+        i = j;
+        j = 2 * i;
+    }
     
+    A[i] = x;
 }
 
 void printArray(int *A,int n){
