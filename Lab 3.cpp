@@ -2,6 +2,10 @@
 
 using namespace std;
 
+void sift(int A[],int n,int right){
+    
+}
+
 void printArray(int *A,int n){
     for (int i = 0; i < n; i++){
         cout << A[i] <<" ";
