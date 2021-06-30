@@ -19,6 +19,7 @@ void swap(int &a,int &b){
     b = c;
 }
 
+//-------------------------->Insertion Sort
 void insertionSort(int arr[], int n, double &running_time, int &count_compare){
     clock_t start, end;
     start = clock();
@@ -40,7 +41,9 @@ void insertionSort(int arr[], int n, double &running_time, int &count_compare){
     end = clock();
     running_time = (double)(end - start) / CLOCKS_PER_SEC;
 }
+//-------------------------->Insertion Sort
 
+//-------------------------->Bubble Sort
 void bubbleSort(int arr[], int n, double &running_time, int &count_compare){
 	clock_t start, end;
 	start = clock();
@@ -55,8 +58,9 @@ void bubbleSort(int arr[], int n, double &running_time, int &count_compare){
 	end = clock();
 	running_time = (double)(end - start) / CLOCKS_PER_SEC;
 }
- 
+//-------------------------->Bubble Sort
 
+//-------------------------->Heap Sort
 void sift(int arr[], int left, int right,double &running_time,int &count_compare){
     int i = left;
     int j = 2 * i;
@@ -107,6 +111,66 @@ void heapSort(int arr[], int n, double &running_time, int &count_compare){
     end = clock();
     running_time = (double)(end - start) / CLOCKS_PER_SEC;
 }
+//-------------------------->Heap Sort
+
+//-------------------------->Quick Sort
+int partition(int arr[], int low, int high, int &count_compare)
+{
+    int pivot = arr[high];
+    int left = low;
+    int right = high - 1;
+    while (true)
+    {
+        while ((++count_compare && left <= right) && (++count_compare && arr[left] < pivot))
+        {
+            left++;
+        }
+
+        while ((++count_compare && right >= left) && (++count_compare && arr[right] > pivot))
+        {
+            right--;
+        }
+
+        
+        if (++count_compare && left >= right)
+            break;
+
+        swap(arr[left], arr[right]);
+        left++;
+        right--;
+    }
+    swap(arr[left], arr[high]);
+    return left;
+}
+
+void Sort(int arr[], int low, int high, int &count_compare)
+{
+    if (++count_compare && low < high)
+    {
+        int pi = partition(arr, low, high, count_compare);
+
+        Sort(arr, low, pi - 1, count_compare);
+        Sort(arr, pi + 1, high, count_compare);
+    }
+}
+
+void QuickSort(int arr[], int n, double& time_use, int& count_compare)
+{
+    count_compare = 0;
+    time_use = 0;
+
+    clock_t start, end;
+
+    start = clock();
+
+    Sort(arr, 0, n - 1, count_compare);
+
+    end = clock();
+
+    time_use = (double)(end - start) / CLOCKS_PER_SEC;
+}
+//-------------------------->Quick Sort
+
 
 void printArray(int *arr, int n){
     for (int i = 0; i < n; i++){
