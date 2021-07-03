@@ -435,14 +435,15 @@ if (checkCount) {
 }
 
     }
-
-
-
     //delete[]arr;
     return true;
 
 }
 
+bool Command_4(int argc, char* argv[], int algorithm1, int algorithm2) {
+    cout << "day la command 4";
+    return true;
+};
 
 //---------------ALGORITHM MODE
 bool handleAlgorithmsMode(int argc, char* argv[]) {
@@ -551,16 +552,12 @@ bool handleComparisonMode(int argc, char* argv[]) {
             //Neu argv[4] khong phai la 1 so -> Input file
             else {
                 if (argc == 5) {
-                    /*
-
-                       COMMAND 4 IS HERE
-                       Vi du
                        if(Command_4(argc, argv, algorithm1,algorithm2 ) == false) {
                            return false;
                        }
-                       return true;
-
-                       */
+                       else {
+                           return true;
+                       }
 
     
                 }
