@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
+//test 
 using namespace std;
 const int N_ALGORITHM = 7;
 const int N_OUTPUT_PARAM = 3;
