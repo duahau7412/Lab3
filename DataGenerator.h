@@ -1,6 +1,6 @@
-
-#ifndef _DATAGENERATOR_H
-#define _DATAGENERATOR_H
+#pragma once
+#ifndef _DATAGENERATOR_H_
+#define _DATAGENERATOR_H_
 template <class T>
 void HoanVi(T& a, T& b);
 void GenerateRandomData(int a[], int n);

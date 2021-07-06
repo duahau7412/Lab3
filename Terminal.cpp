@@ -1,18 +1,20 @@
-﻿#include "Terminal.h"
+﻿#include <iostream>
+#include <fstream>
+
+#include "Terminal.h"
 #include "DataGenerator.h"
 #include "SortingAlgorithms.h"
-#include <string>
-#include <iostream>
-#include <fstream>
-//test 
+
 using namespace std;
-const int N_ALGORITHM = 7;
-const int N_OUTPUT_PARAM = 3;
-const int N_DATA_ORDER = 4;
-string ALGORITHM_NAME[7] = { "selection-sort", "insertion-sort", "bubble-sort", "heap-sort", "merge-sort", "quick-sort","radix-sort" };
+
+int MAX_SIZE = 1000000;
+int N_ALGORITHM = 11;
+int N_OUTPUT_PARAM = 3;
+int N_DATA_ORDER = 4;
+string ALGORITHM_NAME[11] = { "selection-sort", "insertion-sort", "bubble-sort","shaker-sort", "shell-sort", "heap-sort", "merge-sort", "quick-sort","counting-sort","radix-sort","flash-sort" };
 string OUTPUT_PARAM[3] = { "-time","-comp","-both" };
-string DATA_ORDER[4] = { "-rand","-nsorted","-sorted","-rev" };
-const int MAX_SIZE = 1000000;
+string DATA_ORDER[4] = { "-rand","-nsorted","-sorted","-rev"};
+
 
 
 //Kiểm tra chuỗi (string) có phải là một số không ? Kiểu trả về bool
@@ -26,19 +28,20 @@ bool isNumber(string s) {
 
 //Tham chiếu đối số thứ 2 (int&) với chuỗi ALGORITHM_NAME[7]
 bool isValidAlgorithm(string algorithm, int& valid_algorithm) {
-    int Index = 0;
-    while (Index < N_ALGORITHM) {
-        if (ALGORITHM_NAME[Index] == algorithm)
+    int index = 0;
+    while (index < N_ALGORITHM) {
+        if (ALGORITHM_NAME[index] == algorithm)
             break;
-        Index++;
+        index++;
     }
 
-    if (Index == N_ALGORITHM)
+    if (index == N_ALGORITHM)
         return false;
 
-    valid_algorithm = Index;
+    valid_algorithm = index;
     return true;
 }
+
 void ifNOTValidAlgorithm(string algorithm) {
     cout << "'" << algorithm << "' is invalid algorithm name." << endl;
     cout << "All this name  will be accepted: " << endl;
@@ -50,20 +53,21 @@ void ifNOTValidAlgorithm(string algorithm) {
 
 //Check Valid  parameters: "-time", "-comp", "-sort"
 bool isValidOutputParam(string output_param, int& valid_output) {
-    int Index = 0;
-    while (Index < N_OUTPUT_PARAM) {
-        if (OUTPUT_PARAM[Index] == output_param)
+    int index = 0;
+    while (index < N_OUTPUT_PARAM) {
+        if (OUTPUT_PARAM[index] == output_param)
             break;
-        Index++;
+        index++;
     }
 
-    if (Index >= N_OUTPUT_PARAM) {
+    if (index >= N_OUTPUT_PARAM) {
         return false;
     }
 
-    valid_output = Index;
+    valid_output = index;
     return true;
 }
+
 void ifNOTValidOutputParam(string output_param) {
     cout << "'" << output_param << "' is invalid output parameter." << endl;
     cout << "Output parameters: ";
@@ -88,176 +92,32 @@ bool isValidDataOrder(string data_order, int& valid_order) {
     valid_order = index;
     return true;
 }
+
 void ifNOTValidDataOrder(string data_order) {
     cout << "\"" << data_order << "\" is invalid input order." << endl;
     cout << "Input order: ";
     for (int i = 0; i < N_DATA_ORDER; i++) {
         cout << DATA_ORDER[i] << " ";
     }
-   
-}
-
-//Ham tao mang array theo yeu cau (Data Order) !!!CHU Y inputDataOrder
-void DataOrderMODE(int* arr,int inputSIZE ,int inputDataOrder) {
-    switch (inputDataOrder) {
-    case 0: {
-        //rand: randomized data
-        GenerateData(arr, inputSIZE, 0);
-    } break;
-    case 1: {
-        //nsorted: nearly sorted data
-        GenerateData(arr, inputSIZE, 3);
-    } break;
-    case 2: {
-        GenerateData(arr, inputSIZE, 1);
-        //sorted: sorted data
-    } break;
-    case 3: {
-        GenerateData(arr, inputSIZE, 2);
-        //rev: reverse sorted data
-    } break;
-    }
-}
-
-//Switch case Algo
-void AlgorithmsMODE(int* arr, int inputSIZE, double& running_time, int& count_compare, int algorithm) {
-
-    switch (algorithm) {
-    case 0:
-        //Selection Sort
-        selectionSort(arr, inputSIZE, running_time, count_compare);
-        break;
-    case 1:
-        //Insertion Sort
-        insertionSort(arr, inputSIZE, running_time, count_compare);
-        break;
-    case 2:
-        //Bubble Sort
-        bubbleSort(arr, inputSIZE, running_time, count_compare);
-        break;
-    case 3:
-        //Heap Sort
-        break;
-    case 4:
-        //Merge Sort
-        break;
-    case 5:
-        //QuickSort
-        break;
-    case 6:
-        //Radix Sort
-        break;
-    case 7:
-        break;
-    }
 
 }
-
-//Support only for command 1,2,3
-void OutputConsole(string ALGORITHM_NAME, int INPUT_SIZE, string INPUT_ODER, int output_param,double running_time, int count_compare, string INPUT_FILE = "") {
-    cout << endl;
-    cout << "ALGORITHM MODE" << endl;
-    cout << "Algorithm: " << ALGORITHM_NAME << endl;
-    if (INPUT_FILE != "") {
-        cout << "Input file: " << INPUT_SIZE << endl;
-    }
-    else {
-        if (INPUT_SIZE > 0) {
-            cout << "Input size " << INPUT_SIZE << endl;
-       }
-    }
-    cout << "Input order: " << INPUT_ODER << endl;
-    cout << "----------------------------------------------------------------" << endl;
-    switch (output_param) {
-    case 0:
-        cout << "Running time: " << running_time << endl;
-        break;
-    case 1:
-        cout << "Comparisons: " << count_compare << endl;
-        break;
-    case 2:
-        cout << "Running time: " << running_time << endl;
-        cout << "Comparisons: " << count_compare << endl;
-        break;
-    }
-
-}
-
 /*
 Input order  "rand" : randomized data | "nsorted" : nearly sorted data | "sorted" : sorted data | "rev" : reverse sorted data
 
 Output parameters  "time" : algorithms’s running time. • "comp" : number of comparisions "both" : both above options.
 
 Valid Algorithm
-"selection-sort", "insertion-sort", "bubble-sort", "heap-sort", "merge-sort", "quick-sort", "radix-sort"
+"selection-sort", "insertion-sort", "bubble-sort","shaker-sort", "shell-sort", "heap-sort", "merge-sort", "quick-sort","counting-sort","radix-sort","flash-sort" 
 */
 
-//Make directory Output in current directory
-bool CheckDir(const string& string)
-{
-    struct stat buffer;
-    return (stat(string.c_str(), &buffer) == 0);
-}
-
-bool writeGenarateArray(string filename, int* arr, int n, int MODE = 1) {
-    fstream fs;
-    string temp;
-    if (CheckDir("Output")) {
-        temp = "output\\" + filename;
-        fs.open(temp, ios::out);
-    }
-    else {
-       int checkMake = _mkdir("output");
-       if (!checkMake) {
-           fs.open(temp, ios::out);
-       }
-       else {
-           fs.open(filename, ios::out);
-       }
-    }
-
-   
-   
-    if (fs) {
-        fs << n << endl;
-        for (int i = 0; i < n; i++) {
-            fs << arr[i] << " ";
-        }
-        fs.close();
-        if (MODE == 1) {
-            cout << "Write to file '" << filename << "' successfully\n";
-        }
-        return true;
-    }
-    else {
-        if (MODE == 1) {
-            cout << "Write to file '" << filename << "' failed\n"; 
-        }
-        return false;
-    }
-}
-
-bool Command_1(int argc, char* argv[], int algorithm) {
-    int output_param = 0;
-    if (isValidOutputParam(argv[4], output_param) == false) {
-        cout << "'" << argv[4] << "' is invalid output parameter." << endl;
-        cout << "Output parameters: ";
-        for (int i = 0; i < N_OUTPUT_PARAM; i++) {
-            cout << OUTPUT_PARAM[i] << " ";
-        }
-        return false;
-    }
-
-    string filename = argv[3];
+bool readFile(string filename,int* &arr,int &input_size){
     ifstream ifs(filename);
-    if (!ifs) {
-        cout << "Can't open file '" << filename << "' to read" << endl;
+    if(!ifs){
+        cout << "Can't open '" << filename << "'\n";
         return false;
     }
-
-    //Read input size
-    string n = "";
-    getline(ifs, n);
+    string n;
+    getline(ifs,n);
 
     //Check if it is the number
     if (!isNumber(n)) {
@@ -278,68 +138,206 @@ bool Command_1(int argc, char* argv[], int algorithm) {
         }
     }
 
+    input_size = stoi(n);
 
-    int* arr = new int[stoi(n)];
-    int x = 0;
+    arr = new int[input_size];
+    int i = 0;
     string tmp;
 
-    //Read the array from file to arr
-    while (!ifs.eof()) {
-        getline(ifs, tmp, ' ');
-        arr[x++] = stoi(tmp);
+    while(!ifs.eof()){ 
+        getline(ifs,tmp,' ');
+        arr[i++] = stoi(tmp);
+    }
+    if(arr == NULL){
+        cout << "Not enough memory" << endl;
+        return false;
     }
 
-    double running_time = 0;
-    int count_compare = 0;
+    ifs.close();
+    return true;
+}
 
+bool writeFile(string filename,int *arr,int n){
+    ofstream ofs(filename);
+    if(!ofs){
+        cout << "Can't open '" << filename <<"'.\n";
+        return false;
+    }
+
+    ofs << n << endl;
+    for(int i = 0; i < n - 1; i++){
+        ofs << arr[i] << " " ;
+    }
+    ofs << arr[n - 1];
+    ofs.close();
+    
+    return true;  
+}
+
+//Ham tao mang array theo yeu cau (Data Order) !!!CHU Y inputDataOrder
+void DataOrderMODE(int* arr,int inputSIZE ,int inputDataOrder) {
+    switch (inputDataOrder) {
+        case 0:
+            //rand: randomized data
+            GenerateData(arr, inputSIZE, 0);
+            break;
+        case 1: 
+            //nsorted: nearly sorted data
+            GenerateData(arr, inputSIZE, 3);
+            break;
+        case 2: 
+            GenerateData(arr, inputSIZE, 1);
+            //sorted: sorted data
+            break;
+        case 3: 
+            GenerateData(arr, inputSIZE, 2);
+            //rev: reverse sorted data
+            break;
+    }
+}
+
+//Switch case Algo
+void AlgorithmsMODE(int* arr, int inputSIZE, double& running_time,unsigned int& count_compare, int algorithm) {
     switch (algorithm) {
-    case 0:
-        //Selection Sort
-        selectionSort(arr, x, running_time, count_compare);
-        break;
-    case 1:
-        //Insertion Sort
-        insertionSort(arr, x, running_time, count_compare);
-        break;
-    case 2:
-        //Bubble Sort
-        bubbleSort(arr, x, running_time, count_compare);
-        break;
-    case 3:
-        //Heap Sort
-        break;
-    case 4:
-        //Merge Sort
-        break;
-    case 5:
-        //QuickSort
-        break;
-    case 6:
-        //Radix Sort
-        break;
-    case 7:
-        break;
+        case 0:
+            //Selection Sort
+            selectionSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 1:
+            //Insertion Sort, , , , and 
+            insertionSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 2:
+            //Bubble Sort
+            bubbleSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 3:
+            //Shaker Sort
+            shakerSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 4:
+            //Shell Sort
+            shellSort(arr, inputSIZE, running_time,count_compare);
+            break;
+        case 5:
+            //Heap Sort
+            heapSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 6:
+            clock_t start, end;
+            start = clock();
+            //Merge Sort
+            mergeSort(arr, 0, inputSIZE-1, count_compare);
+            end = clock();
+            running_time = (double)(end - start) / CLOCKS_PER_SEC;
+            break;
+        case 7:
+            //QuickSort
+            quickSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 8:
+            //Couting Sort
+            countingSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 9:
+            //Radix Sort
+            radixSort(arr, inputSIZE, running_time, count_compare);
+            break;
+        case 10:
+            //Flash Sort
+            flashSort(arr, inputSIZE, running_time, count_compare);
+            break;
     }
 
-   
-    cout << "ALGORITHM MODE" << endl;
-    cout << "Algorithm: " << ALGORITHM_NAME[algorithm] << endl;
-    cout << "Input file: " << filename << endl;
-    cout << "Input size: " << n << endl;
+}
+
+void OutputConsoleForAlgorithmsMODE(int cmd,char* argv[],int output_param,double running_time,unsigned int count_compare,string Data_Order = "",bool isPrint = true,int file_size = 0){
+    if(isPrint){
+        cout << "ALGORITHM MODE"<<endl;
+
+        string algorithm_name = (string) argv[2];
+        cout << "Algorithm: " << algorithm_name << endl;
+        
+        if(cmd == 1){
+            cout << "Input file: " << argv[3]<<endl;
+            cout << "Input size: " << file_size << endl;
+        }
+        else{
+            cout << "Input size: " << argv[3] << endl;
+            if(cmd == 2){
+                cout << "Input order: " << argv[4] << endl;
+            }
+        }
+    }
+        
+    if(Data_Order != ""){
+        if(cmd == 3){
+            cout << endl<<"Input order: " << Data_Order << endl;
+        }
+    }
     cout << "----------------------------------------------------------------" << endl;
-
     switch (output_param) {
-    case 0:
-        cout << "Running time: " << running_time << endl;
-        break;
-    case 1:
-        cout << "Comparisons: " << count_compare << endl;
-        break;
-    case 2:
-        cout << "Running time: " << running_time << endl;
-        cout << "Comparisons: " << count_compare << endl;
-        break;
+        case 0:
+            cout << "Running time: " << running_time << "s" << endl;
+            break;
+        case 1:
+            cout << "Comparisions: " << count_compare << endl;
+            break;
+        case 2:
+            cout << "Running time: " << running_time << "s" << endl;
+            cout << "Comparisions: " << count_compare << endl;
+            break;
     }
+}
+
+void OutputConsoleForComparisonsMODE(int cmd,char* argv[],double running_time1,double running_time2,unsigned int count_compare1,unsigned int count_compare2,int INPUT_FILE_SIZE = 0){
+    cout << "COMPARE MODE" <<endl;
+    cout << "Algorithm: " << argv[2] << " | " << argv[3] << endl;
+    if(cmd == 4){
+        cout << "Input file: " << argv[4] << endl;
+        cout << "Input size: " << INPUT_FILE_SIZE << endl;
+    }
+    else{
+        if(cmd == 5){
+            cout << "Input size: " << argv[4] << endl;
+            cout << "Input order: "<< argv[5] << endl;
+        }
+    }
+
+    cout << "----------------------------------------------------------------" << endl;
+    cout << "Running time: "<< running_time1 << "s | " << running_time2 <<"s"<< endl;
+    cout << "Comparisions: "<< count_compare1<< " | " << count_compare2<< endl;
+
+}
+
+bool Command_1(int argc, char* argv[], int algorithm) {
+    string filename = (string) argv[3];
+    int output_param = 0;
+    if (isValidOutputParam(argv[4], output_param) == false) {
+        ifNOTValidAlgorithm(argv[4]);
+        return false;
+    }
+
+    int input_size = 0;
+    int* arr = NULL;
+    if(readFile(filename,arr,input_size) == false){
+        return false;
+    }
+   
+    double running_time = 0;
+    unsigned int count_compare = 0;
+
+    AlgorithmsMODE(arr, input_size, running_time, count_compare, algorithm);
+
+    if(writeFile("output.txt",arr,input_size) == false){
+        return false;
+    }
+
+    OutputConsoleForAlgorithmsMODE(1,argv,output_param,running_time, count_compare,"",true,input_size);
+    
+    if(arr != NULL)
+        delete [] arr;
+    return true;
 }
 
 bool Command_2(int argc, char* argv[], int algorithm) {
@@ -347,7 +345,7 @@ bool Command_2(int argc, char* argv[], int algorithm) {
    
     //Check valid [Output parameter(s)] if not show valid [Output parameter(s)] 
     int output_param = 0;
-    if (!isValidOutputParam(argv[5], output_param)) {
+    if (isValidOutputParam(argv[5], output_param) == false) {
         ifNOTValidAlgorithm(argv[5]);
         return false;
     }
@@ -356,46 +354,40 @@ bool Command_2(int argc, char* argv[], int algorithm) {
     int inputSize = stoi((string)argv[3]);
     int x = inputSize;
 
+    //Check valid input data order if not show valid input order to users
     //Check valid [Input order] if not show valid [Input order]
     int input_order = 0;
     if (!isValidDataOrder(argv[4], input_order)) {
         ifNOTValidDataOrder(argv[4]);
         return false;
     }
+
     //[Input order] MODE
     int* arr = new int[inputSize];
     DataOrderMODE(arr, inputSize, input_order);
-    
-    // Write down the generated input to the "input.txt" file
-    bool checkInputFile = writeGenarateArray("input.txt", arr, x, 0);
 
-    //[Algorithm] MODE
     double running_time = 0;
-    int count_compare = 0;
+    unsigned int count_compare = 0;
+
+    //Write generated data to input.txt
+    if(writeFile("input.txt", arr, inputSize) == false){
+        return false;
+    }
 
     AlgorithmsMODE(arr, inputSize, running_time, count_compare, algorithm);
-    OutputConsole(ALGORITHM_NAME[algorithm], inputSize, DATA_ORDER[input_order], output_param,running_time, count_compare);
+    OutputConsoleForAlgorithmsMODE(2,argv,output_param,running_time, count_compare);
     
-    
-    
-    if (checkInputFile == false) {
-        cout << "Write to file 'input.txt' failed \n";
+    //Write sorted data to output.txt
+    if (writeFile("output.txt", arr, inputSize) == false) {
+        return false;
     }
-    else {
-        cout << "Write to file 'input.txt' successfully \n";
-    }
-
-    //Write down the sorted array to the "output.txt" file.
-    writeGenarateArray("output.txt", arr, x, 1);
 
     delete[]arr;
     return true;
-
 }
-   
+
 bool Command_3(int argc, char* argv[], int algorithm) {
     //[Execution file] -a [Algorithm] [Input size] [Output parameter(s)]
-
     
     //Check vaid output parameters if not show valid output parameters to users
     int output_param = 0;
@@ -404,63 +396,108 @@ bool Command_3(int argc, char* argv[], int algorithm) {
         return false;
     }
     
-    //Check valid input size 
+   //Check valid input size 
     int inputSize = stoi((string)argv[3]);
-    int x = inputSize; 
 
-    //int* arr = new int[inputSize];
-    //double running_time = 0;
-    //int count_compare = 0;
-    
+    double running_time = 0;
+    unsigned int count_compare = 0;
+
+    bool flag = true;
     for (int i = 0; i < 4; i++) {
+        if(i == 1){
+            flag = false;
+        }
         //Tao mang du lieu theo yeu cau
         int* arr = new int[inputSize];
-        double running_time = 0;
-        int count_compare = 0;
+        running_time = 0;
+        count_compare = 0;
         DataOrderMODE(arr, inputSize, i);
 
         string suffix = ".txt";
         string filename = "input_";
         filename.append(to_string(i + 1)).append(suffix);
 
-        bool checkCount = writeGenarateArray(filename, arr, inputSize, 0);
-
+        if(writeFile(filename, arr, inputSize) == false){
+            return false;
+        }
 
         AlgorithmsMODE(arr, inputSize, running_time, count_compare, algorithm);
-        OutputConsole(ALGORITHM_NAME[algorithm], inputSize, DATA_ORDER[i], output_param, running_time, count_compare);
+        OutputConsoleForAlgorithmsMODE(3,argv,output_param,running_time, count_compare,DATA_ORDER[i], flag);
 
         delete[]arr;
-if (checkCount) {
-    cout << "Write to file " << filename << " successfully\n";
-}
-
     }
-    //delete[]arr;
-    return true;
-
+    
+    return true;     
 }
 
-bool Command_4(int argc, char* argv[], int algorithm1, int algorithm2) {
-    cout << "day la command 4";
+bool Command_4(int argc, char* argv[], int algorithm1, int algorithm2){
+    string filename = argv[4];
+
+    int* arr;
+    int input_size = 0;
+    
+    if(readFile(filename,arr,input_size) == false)
+        return false;
+
+    //Copy input to brr
+    int* brr = new int[input_size];
+    for (int i = 0; i < input_size; i++)
+        brr[i] = arr[i];
+
+    double running_time1 = 0, running_time2 = 0;
+    unsigned int count_compare1 = 0, count_compare2 = 0;
+
+    AlgorithmsMODE(arr, input_size, running_time1, count_compare1, algorithm1);
+    AlgorithmsMODE(brr, input_size, running_time2, count_compare2, algorithm2);
+
+    OutputConsoleForComparisonsMODE(4,argv,running_time1,running_time2, count_compare1, count_compare2,input_size);
+ 
+    delete[]arr;
+    delete[]brr;
     return true;
-};
+}
+
+bool Command_5(int argc, char* argv[], int algorithm1, int algorithm2)
+{
+    
+    int size = stoi((string) argv[4]);
+    int* arr = new int[size];
+    int* brr = new int[size];
+    
+    int data_order = 0;
+    if(isValidDataOrder(argv[5],data_order) == false)
+        return false;
+
+    double running_time1 = 0, running_time2 = 0;
+    unsigned int count_compare1 = 0, count_compare2 = 0;
+
+    GenerateData(arr, size, data_order);
+    for(int i = 0; i < size; i++){
+        brr[i] = arr[i];
+    }
+
+    if(writeFile("input.txt",arr,size) == false){
+        return false;
+    }
+    AlgorithmsMODE(arr, size, running_time1, count_compare1, algorithm1);
+    AlgorithmsMODE(brr, size, running_time2, count_compare2, algorithm2);
+
+    OutputConsoleForComparisonsMODE(5,argv,running_time1,running_time2, count_compare1, count_compare2);
+    
+    delete[]arr;
+    delete[]brr;
+    return true;
+}
 
 //---------------ALGORITHM MODE
 bool handleAlgorithmsMode(int argc, char* argv[]) {
-    /*if (argc <= 4) {
-        cout << "Usage: [Execution file] -a [Algorithm] [Given input] [Output parameter(s)]" << endl;
-        cout << "       [Execution file] -a [Algorithm] [Input size] [Input order] [Output parameter(s)]" << endl;
-        cout << "       [Execution file] -a [Algorithm] [Input size] [Output parameter(s)]" << endl;
-        return false;
-    }*/
-    //else {
     int algorithm = 0;
     if (isValidAlgorithm(argv[2], algorithm) == false) {
         ifNOTValidAlgorithm(argv[2]);
         return false;
     }
-    else {  //isNumber((string)argv[3]
-        if (stoi((string)argv[3])) {
+    else {
+        if (isNumber((string)argv[3])) {
             if (stoi((string)argv[3]) > MAX_SIZE || stoi((string)argv[3]) < 0) {
                 cout << "Invalid input size" << endl;
                 cout << "Accepting input size n < " << MAX_SIZE << endl;
@@ -472,33 +509,24 @@ bool handleAlgorithmsMode(int argc, char* argv[]) {
                     return false;
                 }
                 else {
-                    if (argc == 6) {
-                        if (Command_2(argc, argv, algorithm) == false) {
+                    if (argc == 5) {
+                        if(Command_3(argc, argv,algorithm) == false)
                             return false;
-                        }
-                        return true;
                     }
                     else {
-                        if (argc == 5) {
-                            if (Command_3(argc, argv, algorithm) == false) {
+                        if (argc == 6) {
+                            if(Command_2(argc, argv,algorithm) == false)
                                 return false;
-                            }
-                            return true;
                         }
                     }
                 }
-
             }
-        } //if argv[3] not a number -> input file
-            //check inputfile
+        }
         else {
-            /*
             if(Command_1(argc,argv,algorithm) == false)
                 return false;
-            */
         }
     }
-    //}
     return true;
 }
 
@@ -519,8 +547,7 @@ bool handleComparisonMode(int argc, char* argv[]) {
         }
         else {
             //Check input size for command 4
-            bool check = isNumber((string)argv[4]);
-            if (check) {
+            if ( isNumber((string)argv[4])) {
                 if (stoi((string)argv[4]) > MAX_SIZE || stoi((string)argv[4]) < 0) {
                     cout << "Invalid input size" << endl;
                     cout << "Accepting input size n < " << MAX_SIZE << endl;
@@ -533,19 +560,10 @@ bool handleComparisonMode(int argc, char* argv[]) {
                     }
                     else {
                         if (argc == 6) {
-                        /*
-                        
-                        COMMAND 5 IS HERE
-                        Vi du
-                        if(Command_5(argc, argv, algorithm1, algorithm2) == false) {
-                            return false;
-                        }
-                        return true;
-
-                        */
-                            
-                        }
-                        
+                            if(Command_5(argc, argv, algorithm1, algorithm2) == false) {
+                                return false;
+                            }                           
+                        } 
                     }
                 }
             }
@@ -555,14 +573,8 @@ bool handleComparisonMode(int argc, char* argv[]) {
                        if(Command_4(argc, argv, algorithm1,algorithm2 ) == false) {
                            return false;
                        }
-                       else {
-                           return true;
-                       }
-
-    
                 }
-            }
-            
+            } 
         }
     }
     return true;
@@ -592,6 +604,7 @@ bool handleArguments(int argc, char* argv[]) {
 
     return true;
 }
+
 void DevTestMode() {
    
     cout << "\n-----------------TEST MODE-----------------\n";
@@ -602,62 +615,75 @@ void DevTestMode() {
 
     if (choice == 1) {
         cout << "\n-----------------SORTING TEST---------------\n";
-        cout << "0-Selection Sort,1-Insertion Sort, 2-Bubble Sort, 3-Heap Sort, 4-Merge Sort, 5-QuickSort, 6-Radix Sort \n";
+        cout << "0-Selection Sort,1-Insertion Sort,2-Bubble Sort,3-Shaker Sort,4-Shell Sort,5-Heap Sort,6-Merge Sort,7-Quick Sort,8-Counting Sort,9-Radix Sort,10-Flash Sort \n";
         unsigned int algorithm;
         do {
-            cout << "input algorithm code (0-6) \n";
+            cout << "input algorithm code (0-10) \n";
             cin >> algorithm;
         }
-        while ( algorithm > 6);
+        while ( algorithm > 10);
         unsigned int DATA_SIZE[6] = { 10000 ,30000,50000,100000, 300000, 500000 };
+        cout << "Algorithms: " <<ALGORITHM_NAME[algorithm] << endl;
         for (int i = 0; i < 6; i++) {
-            
-            
-            for (int j = 0; j < 4; j++) {
+            for (int j = 1; j < 4; j++) {
                 int inputSize = DATA_SIZE[i];
                 int* arr = new int[inputSize];
                 double running_time = 0;
-                int count_compare = 0;
+                unsigned int count_compare = 0;
                 DataOrderMODE(arr, inputSize, j);
                 AlgorithmsMODE(arr, inputSize, running_time, count_compare, algorithm);
-                OutputConsole(ALGORITHM_NAME[algorithm], inputSize, DATA_ORDER[j], 2, running_time, count_compare);
+                cout <<"Input size: " <<inputSize << endl;
+                cout <<"Input order: "<< DATA_ORDER[j] << endl;
+                cout << "---------------------------------------------" <<endl;
+                cout << "Running time: " << running_time  << "s"<< endl;
+                cout << "Comparisions: " << count_compare << "\n\n";
                 delete[]arr;
             }
-           
         }
         
     }
 
     if (choice == 2) {
-        
-        cout << "\n-----------------CONSOLE MODE---------------\n";
-        cout << "Enter commnad \n";
-        cin.ignore();
-        string line,temp[6]; int argc = 0;
-        char** argv = new char* [6];
-        getline(cin, line);
-        stringstream ss(line);
-        while (!ss.eof()) {
-            getline(ss, temp[argc], ' ');
-            argc++;
-        }
-
-        for (int i = 0; i < argc; i++) {
-            argv[i] = new char[30];
-            for (int j = 0; j < temp[i].size(); j++) {
-                argv[i][j] = temp[i][j];
+        while(true){
+            cout << "\n-----------------CONSOLE MODE---------------\n";
+            cout << "Enter 'q' to quit program.\n";
+            cout << "Enter command: \n";
+            string line,temp[6]; 
+            int argc = 0;
+            char** argv = new char* [6];
+            cin.ignore();
+            getline(cin, line);
+            if(line == "q" || line == "")
+                break;
+            stringstream ss(line);
+            while (!ss.eof()) {
+                getline(ss, temp[argc], ' ');
+                argc++;
             }
-            argv[i][temp[i].size()] = '\0';
-        }
-        
-       
-       //Write your code here:
-        //-------------------------------------------
 
-        if (handleArguments(argc, argv)) {
+            for (int i = 0; i < argc; i++) {
+                argv[i] = new char[30];
+                for (int j = 0; j < temp[i].size(); j++) {
+                    argv[i][j] = temp[i][j];
+                }
+                argv[i][temp[i].size()] = '\0';
+            }
+            
+        
+        //Write your code here:
+            //-------------------------------------------
+
+            if (handleArguments(argc, argv)) {
+            }
+
+            for(int i = 0; i < argc;i++){
+                delete[] argv[i];
+            }
+            delete[] argv;
+            
+        //-------------------------------------------  
         }
-       
-       //-------------------------------------------        
+              
     }
    
 }
